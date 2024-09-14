@@ -25,6 +25,8 @@ function registerListeners() {
                 button.addEventListener("click", () => onOperatorEntered(button.textContent));
             } else if (button.classList.contains("clear")) {
                 button.addEventListener("click", clear);
+            } else if (button.classList.contains("decimal")) {
+                button.addEventListener("click", onDecimalPointEntered);
             }
         }
     }
@@ -64,7 +66,16 @@ function onNumberEntered(numberString) {
         console.log("Number conversion failed: " + numberString);
         return;
     }
-    currentNumberInput += number.toString();
+    addInput(number.toString());
+}
+
+function onDecimalPointEntered() {
+    if (currentNumberInput.includes(".")) return;
+    addInput(".");
+}
+
+function addInput(input) {
+    currentNumberInput += input;
     if (operator === null) {
         firstNumber = parseFloat(currentNumberInput);
     } else {
