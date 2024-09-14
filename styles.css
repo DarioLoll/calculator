@@ -96,13 +96,13 @@ main {
     font-size: 70px;
 }
 
-.number {
+.number, .decimal {
     background-color: #35455c;
 }
-.number:hover {
+.number:hover, .decimal:hover {
     background-color: #293647;
 }
-.number:active {
+.number:active, .decimal:active {
     background-color: #222d3c;
 }
 

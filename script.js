@@ -1,15 +1,37 @@
-let firstNumber = 0;
-let secondNumber = 0;
-let operator;
+let firstNumber = null;
+let secondNumber = null;
+let currentNumberInput = "";
+let operator = null;
 
-let result = 0;
-let calculation;
+let result = null;
+let calculation = null;
 
-let resultDisplay = document.querySelector(".result");
+let numberDisplay = document.querySelector(".result");
 let calculationDisplay = document.querySelector(".calculation");
 
+registerListeners();
+
+function registerListeners() {
+    let buttonRows = document.querySelectorAll(".button-row");
+    for (const buttonRow of buttonRows) {
+        for (const button of buttonRow.children) {
+            if(button.classList.contains("invert")) {
+                button.addEventListener("click", invert);
+            } else if (button.classList.contains("equals")) {
+                button.addEventListener("click", operate)
+            } else if (button.classList.contains("number")) {
+                button.addEventListener("click", () => onNumberEntered(button.textContent));
+            } else if (button.classList.contains("operator")) {
+                button.addEventListener("click", () => onOperatorEntered(button.textContent));
+            } else if (button.classList.contains("clear")) {
+                button.addEventListener("click", clear);
+            }
+        }
+    }
+}
+
 function operate() {
-    calculation = `${firstNumber} ${operator} ${secondNumber}`;
+    console.log("Calculating...");
     switch (operator) {
         case "+":
             add();
@@ -17,33 +39,68 @@ function operate() {
         case "-":
             subtract();
             break;
-        case "*":
+        case "×":
             multiply();
             break;
-        case "/":
+        case "÷":
             divide();
             break;
         case "%":
             modulo();
             break;
         default:
-            result = "?"
-            break;
+            return;
     }
     updateDisplay();
-    clear();
     firstNumber = result;
+    operator = null;
+    secondNumber = null;
+    result = null;
+}
+
+function onNumberEntered(numberString) {
+    let number = parseInt(numberString);
+    if (isNaN(number)) {
+        console.log("Number conversion failed: " + numberString);
+        return;
+    }
+    currentNumberInput += number.toString();
+    if (operator === null) {
+        firstNumber = parseFloat(currentNumberInput);
+    } else {
+        secondNumber = parseFloat(currentNumberInput);
+    }
+    updateDisplay();
+}
+
+function onOperatorEntered(operatorString) {
+    if (operatorString === null) return;
+    if (operatorString.length !== 1) return;
+    let validOperators = "+-×*/÷%";
+    if (validOperators.indexOf(operatorString) === -1) return;
+    console.log("Operator entered " + operatorString);
+    operator = operatorString;
+    currentNumberInput = "";
+    updateDisplay();
 }
 
 function updateDisplay() {
-    resultDisplay.textContent = result;
+    calculation = `${firstNumber ?? ""} ${operator ?? ""} ${secondNumber ?? ""}`;
+    if (calculation.trim().length === 0) {
+        calculation = "0"
+    }
+    numberDisplay.textContent = result ?? secondNumber ?? firstNumber ?? 0;
     calculationDisplay.textContent = calculation;
 }
 
 function clear() {
-    firstNumber = NaN;
-    secondNumber = NaN;
-    operator = "";
+    currentNumberInput = "";
+    firstNumber = null;
+    secondNumber = null;
+    calculation = null;
+    operator = null;
+    result = null;
+    updateDisplay();
 }
 
 function add() {
@@ -66,9 +123,12 @@ function modulo() {
     result = firstNumber % secondNumber;
 }
 function invert() {
-    if (!isNaN(secondNumber)) {
+    if (secondNumber !== null) {
         secondNumber = -secondNumber;
-    } else {
+        currentNumberInput = secondNumber.toString();
+    } else if (firstNumber !== null) {
         firstNumber = -firstNumber;
+        currentNumberInput = firstNumber.toString();
     }
+    updateDisplay();
 }
