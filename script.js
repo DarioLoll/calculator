@@ -13,6 +13,7 @@ registerListeners();
 
 function registerListeners() {
     let buttonRows = document.querySelectorAll(".button-row");
+    document.addEventListener("keydown", onKeyDown)
     for (const buttonRow of buttonRows) {
         for (const button of buttonRow.children) {
             if(button.classList.contains("invert")) {
@@ -32,8 +33,24 @@ function registerListeners() {
     }
 }
 
+function onKeyDown(event) {
+    let numbers = "0123456789";
+    let operators = "+-*/:%×÷";
+    if (numbers.includes(event.key)) {
+        onNumberEntered(event.key);
+    } else if (operators.includes(event.key)) {
+        onOperatorEntered(event.key);
+    } else if (event.key.toLowerCase() === "enter") {
+        operate();
+    } else if (event.key.toLowerCase() === "c" || event.key.toLowerCase() === "delete") {
+        clear();
+    } else if (event.key === "." || event.key === ",") {
+        onDecimalPointEntered();
+    }
+}
+
 function operate() {
-    console.log("Calculating...");
+    console.log(`Calculating: ${firstNumber} ${operator} ${secondNumber}`);
     switch (operator) {
         case "+":
             add();
@@ -42,9 +59,12 @@ function operate() {
             subtract();
             break;
         case "×":
+        case "*":
             multiply();
             break;
         case "÷":
+        case ":":
+        case "/":
             divide();
             break;
         case "%":
@@ -53,9 +73,11 @@ function operate() {
         default:
             return;
     }
+    console.log("Rounding " + result);
     result = Math.round(result * 10000) / 10000;
     updateDisplay();
     firstNumber = result;
+    currentNumberInput = "";
     operator = null;
     secondNumber = null;
     result = null;
