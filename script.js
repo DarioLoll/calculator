@@ -53,6 +53,7 @@ function operate() {
         default:
             return;
     }
+    result = Math.round(result * 10000) / 10000;
     updateDisplay();
     firstNumber = result;
     operator = null;
@@ -90,6 +91,9 @@ function onOperatorEntered(operatorString) {
     let validOperators = "+-×*/÷%";
     if (validOperators.indexOf(operatorString) === -1) return;
     console.log("Operator entered " + operatorString);
+    if (secondNumber !== null) {
+        operate();
+    }
     operator = operatorString;
     currentNumberInput = "";
     updateDisplay();

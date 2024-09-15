@@ -74,6 +74,8 @@ main {
     justify-content: center;
     align-items: end;
     gap: 10px;
+    max-width: 446px;
+    text-wrap: wrap;
 }
 
 .display {
@@ -88,12 +90,16 @@ main {
 .calculation {
     color: #C9CAC8;
     font-size: 20px;
+    max-width: 370px;
+    word-wrap: break-word;
 }
 
 .result {
     color: #F9FAF8;
     font-weight: bold;
     font-size: 70px;
+    max-width: 370px;
+    word-wrap: break-word;
 }
 
 .number, .decimal {
